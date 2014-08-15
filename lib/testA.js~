@@ -1,0 +1,3 @@
+let testB = require('./testB');
+
+console.log(testB);

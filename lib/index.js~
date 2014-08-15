@@ -25,12 +25,14 @@ function incoming(message) {
 }
 
 function outgoing(match) {
-	channel.publish(config.amqp.publisher.exchange, 
+	/*channel.publish(config.amqp.publisher.exchange, 
 									config.amqp.publisher.routingPattern, 
 									new Buffer(JSON.stringify(match)),
-									{ contentType: 'application/json' });
+									{ contentType: 'application/json' });*/
+	console.log('matched ' + match);
 }
 
+let test;
 appReady().then(function() {
 	return Entry.findAll();
 }).then(function(entries) {
@@ -38,10 +40,22 @@ appReady().then(function() {
 	matcher.on('match', outgoing);
 	matcher.start();
 
+	test = setInterval(function() {
+
+		let entry = new Entry.Entry({
+			playerid: '' + (Math.floor(Math.random() * 1000000) + 1),
+			playerstrength: Math.floor(Math.random() * 1800) + 400
+		});
+
+		matcher.addEntry(entry);
+	}, 50);
+
+	process.on('SIGINT', function() {
+		clearInterval(test);
+	});
+
 	channel.consume(config.amqp.consumer.queue, incoming);
 });
-
-
 
 
 

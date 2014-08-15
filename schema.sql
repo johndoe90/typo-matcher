@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS entries (
+	id BIGSERIAL PRIMARY KEY,
+	priority SMALLINT NOT NULL,
+	playerid VARCHAR(36) NOT NULL,
+	playerstrength SMALLINT NOT NULL,
+	CONSTRAINT playerid UNIQUE(playerid)
+);
